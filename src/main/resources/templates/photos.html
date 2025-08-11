@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Photo Gallery</title></head>
+<body>
+<h2>Welcome [[${user.username}]]</h2>
+
+<form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button type="submit">Upload</button>
+</form>
+
+<hr/>
+<ul>
+    <li th:each="photo : ${photos}">
+        <img th:src="@{'/uploads/' + ${photo.filename}}" width="150" />
+        <span>Uploaded by [[${photo.uploadedBy.username}]]</span>
+        <form th:if="${photo.uploadedBy.id == user.id}" th:action="@{'/delete/' + ${photo.id}}" method="post">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+
+<a th:href="@{/logout}">Logout</a>
+</body>
+</html>
