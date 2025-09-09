@@ -10,16 +10,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/uploads/**").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/photos", true))
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login"));
-
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/api/register",
+                    "/api/reset-password/**",
+                    "/api/uploads/**"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
+            .httpBasic(httpBasic -> {});
         return http.build();
     }
 
