@@ -19,7 +19,6 @@ public class User {
     @OneToMany(mappedBy = "uploadedBy", cascade = CascadeType.ALL)
     private List<Photo> photos;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
