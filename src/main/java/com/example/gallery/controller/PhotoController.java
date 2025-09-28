@@ -62,15 +62,28 @@ public class PhotoController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<UserDto>> registerUser(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<ApiResponse<UserDto>> registerUser(
+            @RequestParam String username,
+            @RequestParam String password) {
+
+        // 1️⃣ Check if username already exists
+        if (userRepo.findByUsername(username).isPresent()) {
+            return ResponseEntity.status(409) // HTTP 409 Conflict
+                    .body(new ApiResponse<>("Username already exists", null));
+        }
+
+        // 2️⃣ Create and save new user
         User user = new User();
         user.setUsername(username);
         user.setPassword(new BCryptPasswordEncoder().encode(password));
         userRepo.save(user);
 
+        // 3️⃣ Prepare response DTO
         UserDto userDto = new UserDto(user.getId(), user.getUsername());
+
         return ResponseEntity.ok(new ApiResponse<>("User registered successfully", userDto));
     }
+
 
     @PutMapping("/reset-password/{username}")
     public ResponseEntity<ApiResponse<Void>> resetPassword(@PathVariable String username, @RequestParam String newPassword) {
